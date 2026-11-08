@@ -1,4 +1,14 @@
 import math
+import sys
+
+# Define your minimum required version as (major, minor)
+MIN_PYTHON = (3, 12)
+
+if sys.version_info < MIN_PYTHON:
+    sys.exit(f"Python {'.'.join(map(str, MIN_PYTHON))} or higher is required.")
+
+# Rest of your imports and code go below
+
 
 altitude               = 12000     # meters
 temperature_static_0   = 250       # K
@@ -31,11 +41,11 @@ specific_gas_constant_air = 287   # J/(kg * K)
 # Total Temperature
 total_temperature_1  = temperature_static_0 / ( 1 +  ((gamma - 1)/2) * pow(airspeed, 2))
 
-print(f"Total temperature:  {total_temperature_1}")
+print(f"Total temperature (1):  {total_temperature_1}")
 
-total_pressure_1 = static_pressure_0 * pow(1 + ((gamma -1)/2) * pow(airspeed, 2), (gamma/(gamma -1)))
+total_pressure_0 = static_pressure_0 * pow(1 + ((gamma -1)/2) * pow(airspeed, 2), (gamma/(gamma -1)))
 
-print(f"Total pressure:  {total_pressure_1}")
+print(f"Total pressure (0):  {total_pressure_0}")
 
 # Functions
 if(airspeed > 1 and airspeed < 5):
@@ -49,19 +59,14 @@ print(f"Inlet pressure recovery efficiency:  {inlet_pressure_recovery_efficiency
 # Inlet Mass Flow
 inlet_mass_flow_rate_1 = (
         inlet_area_1 / pow(gamma/specific_gas_constant_air, 0.5)
-        * total_pressure_1 / pow(total_temperature_1, 0.5)
+        * total_pressure_0 / pow(total_temperature_1, 0.5)
         * airspeed * pow((1 + ((gamma -1/2) * pow(airspeed, 2))), (-(gamma + 1)/(2 * (gamma - 1))))
     )
 
-print(f"Inlet mass flow rate 1:  {inlet_mass_flow_rate_1}")
+print(f"Inlet mass flow rate (1):  {inlet_mass_flow_rate_1}")
 
-inlet_mass_flow_rate_2 = (
-        inlet_area_1 / pow(gamma/specific_gas_constant_air, 0.5)
-        * total_pressure_1 / pow(total_temperature_1, 0.5)
-        * airspeed * pow((1 + ((gamma -1/2) * pow(airspeed, 2))), (-(gamma + 1)/(2 * (gamma - 1))))
-)
+total_pressure_1 = inlet_pressure_recovery_efficiency * total_pressure_0
 
-print(f"Inlet mass flow rate 2:  {inlet_mass_flow_rate_2}")
-
+print(f"Total pressure (1):  {total_pressure_1}")
 
 
